@@ -21,8 +21,8 @@ def hsv_finder(img):
 
     image=img
     h,w=image.shape[0:2]
-    h=math.floor(h*0.8)
-    w=math.floor(w*0.8)
+    h=math.floor(h*0.6)
+    w=math.floor(w*0.6)
     print(image.shape[0:2],(h,w))
     image = cv2.resize(image, (h,w))  
     cv2.namedWindow('image')
@@ -101,11 +101,13 @@ canvas=np.zeros((700,1600,3),np.uint8)
 canvas[0:550,0:700,:]=wf_cropped
 canvas[0:340,700:1200,:]=macro_cropped
 canvas[0:700,1200:1600,:]=nesi_cropped
-plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
-plt.show()
-# canvas=cv2.medianBlur(canvas,7)
+# plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
+# plt.show()
+
+canvas=cv2.medianBlur(canvas,7)
 canvas=pre.hist_eq(canvas)
-plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
-plt.show()
+
+# plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
+# plt.show()
 
 hsv_finder(canvas)

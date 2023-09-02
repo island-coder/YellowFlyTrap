@@ -12,18 +12,25 @@ def hsv_sep(img,low,high):
     img_masked=cv2.bitwise_and(img,img,mask=hsv_mask)
     # plt.imshow(img_masked)
     # plt.show()
-    return img_masked
+    return img_masked,hsv_mask
     
+# def hsv_sep_wf(img):
+#     return hsv_sep(img,(0,0,210),(179,119,255))
+
 def hsv_sep_wf(img):
-    return hsv_sep(img,(0,0,210),(179,119,255))
-    
+    return hsv_sep(img,(0,0,0),(179,100,255))
+
+# def hsv_sep_macro(img):
+#     return hsv_sep(img,(0,0,0),(27,255,209))    
+
+def hsv_sep_macro(img):
+    return hsv_sep(img,(0,138,0),(179,243,255))    
+       
 def hsv_sep_nesi(img):
     return hsv_sep(img,(0,0,0),(24,250,212))
-    
-def hsv_sep_macro(img):
-    return hsv_sep(img,(0,0,0),(27,255,209))    
-    
 
-
+# def hsv_sep_nesi(img):
+#     return hsv_sep(img,(0,0,0),(179,242,225))
+    
 
 

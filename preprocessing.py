@@ -40,6 +40,53 @@ def hist_eq(img):
     # plt.imshow(img_he)
     # plt.show()
     return img_he
+
+
+def remove_artefacts(img):
+    img_gs=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # plt.subplot(221)
+    # plt.imshow(img_gs,'gray')
+    img_gs=cv2.medianBlur(img_gs,15)
+    # plt.subplot(222)
+    # plt.imshow(img_gs,'gray')
+    ret,thresh1 = cv2.threshold(img_gs,127,255,cv2.THRESH_BINARY)
+    img_copy=np.ones((thresh1.shape),dtype=thresh1.dtype)
+    # ret2,thresh1 = cv2.threshold(img_gs,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    # plt.subplot(223)
+    # plt.imshow(thresh1,'gray')
+    kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(41,41))
+    thresh1_closing = cv2.morphologyEx(thresh1, cv2.MORPH_CLOSE, kernel)
+    thresh1_opening = cv2.morphologyEx(thresh1_closing, cv2.MORPH_OPEN, kernel)
+    # thresh1_=cv2.morphologyEx(thresh1_closing, cv2.MORPH_ERODE, kernel)
+    # plt.subplot(224)
+    # plt.imshow(closing,'gray')
+    # plt.show()
+
+    ret,thresh2 = cv2.threshold(img_gs,205,255,cv2.THRESH_BINARY_INV)
+    thresh2_closing = cv2.morphologyEx(thresh2, cv2.MORPH_CLOSE, kernel)
+    thresh2_opening = cv2.morphologyEx(thresh2_closing, cv2.MORPH_OPEN, kernel)
+    
+    aretefact_mask=cv2.bitwise_and(thresh1,thresh2_opening)
+    aretefact_mask=cv2.bitwise_not(aretefact_mask)
+
+    # plt.imshow(aretefact_mask,'gray')
+    # plt.show()
+    contours, hierarchy = cv2.findContours(aretefact_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    for cnt in contours:
+        x,y,w,h = cv2.boundingRect(cnt)
+        cv2.rectangle(img_copy,(x,y),(x+w,y+h),(0,0,0),-1)
+
+    # plt.subplot(131)
+    # plt.imshow(thresh1,'gray')
+    # plt.subplot(132)
+    # plt.imshow(thresh2_opening,'gray')
+    # plt.subplot(133)
+    # plt.imshow(img_copy,'gray')
+    # plt.show()
+
+    print(aretefact_mask.shape,img_copy.shape)
+    return img_copy
+
   
 # img=cv2.imread('assets/macro_test.jpg')
 # # plt.subplot(131)
@@ -60,3 +107,7 @@ def hist_eq(img):
 
 # img=cv2.imread('assets/mix.jpg')
 # extract_trap(img)
+
+# img = cv2.imread('assets/var/1273.jpg')
+# img=extract_trap(img)
+# remove_artefacts(img)
