@@ -109,5 +109,11 @@ canvas=pre.hist_eq(canvas)
 
 # plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
 # plt.show()
+img=cv2.imread('assets/other.jpg')
+# img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+img=img[1100:1800,720:1700]
+img=pre.hist_eq(img)
+# plt.imshow(img)
+# plt.show()
 
-hsv_finder(canvas)
+hsv_finder(img)

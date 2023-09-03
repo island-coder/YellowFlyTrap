@@ -6,9 +6,12 @@ import preprocessing as pre
 import hsv_seperation as hsv
 import utility as util
 
-img = cv2.imread('assets/var/1273.jpg')
+img = cv2.imread('assets/var/1277.jpg')
 img=pre.extract_trap(img)
+
 artefact_mask=pre.remove_artefacts(img)
+unknown_class_mask=pre.remove_unkown_class(img)
+
 img_blur =cv2.medianBlur(img,7)
 img_he=pre.hist_eq(img_blur)
 
@@ -27,7 +30,9 @@ for cnt in contours:
 # plt.show()
 
 img_macro_mask,mask= hsv.hsv_sep_macro(img_he)
-mask_wo_artefacts=cv2.bitwise_and(mask,mask,mask = artefact_mask)
+mask_wo_unkown =cv2.bitwise_and(mask,mask,mask = unknown_class_mask)
+
+mask_wo_artefacts=cv2.bitwise_and(mask_wo_unkown,mask_wo_unkown,mask = artefact_mask)
 plt.subplot(131)
 plt.title('artefact mask')
 plt.imshow(artefact_mask,'gray')
@@ -55,10 +60,10 @@ for cnt in contours:
 
 img_nesi_mask,mask= hsv.hsv_sep_nesi(img_he)
 mask_wo_artefacts=cv2.bitwise_and(mask,mask,mask = artefact_mask)
-plt.imshow(mask,'gray')
-plt.title('nesi mask')
-plt.axis('off')
-plt.show()
+# plt.imshow(mask,'gray')
+# plt.title('nesi mask')
+# plt.axis('off')
+# plt.show()
 
 contours, hierarchy = cv2.findContours(mask_wo_artefacts, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 for cnt in contours:

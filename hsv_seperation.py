@@ -32,5 +32,6 @@ def hsv_sep_nesi(img):
 # def hsv_sep_nesi(img):
 #     return hsv_sep(img,(0,0,0),(179,242,225))
     
-
+def hsv_sep_unkown(img):
+    return hsv_sep(img,(29,0,0),(179,255,255))
 

@@ -1,6 +1,7 @@
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import hsv_seperation as hsv
 
 
 def extract_trap(img):
@@ -43,6 +44,7 @@ def hist_eq(img):
 
 
 def remove_artefacts(img):
+    # img=hist_eq(img)
     img_gs=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # plt.subplot(221)
     # plt.imshow(img_gs,'gray')
@@ -62,7 +64,7 @@ def remove_artefacts(img):
     # plt.imshow(closing,'gray')
     # plt.show()
 
-    ret,thresh2 = cv2.threshold(img_gs,205,255,cv2.THRESH_BINARY_INV)
+    ret,thresh2 = cv2.threshold(img_gs,210,255,cv2.THRESH_BINARY_INV) #205
     thresh2_closing = cv2.morphologyEx(thresh2, cv2.MORPH_CLOSE, kernel)
     thresh2_opening = cv2.morphologyEx(thresh2_closing, cv2.MORPH_OPEN, kernel)
     
@@ -87,6 +89,29 @@ def remove_artefacts(img):
     print(aretefact_mask.shape,img_copy.shape)
     return img_copy
 
+def remove_unkown_class(img):
+    img=hist_eq(img)
+    img_unknown,mask=hsv.hsv_sep_unkown(img)
+    kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(5,5))    
+    mask_erode=cv2.morphologyEx(mask, cv2.MORPH_ERODE, kernel)
+    kernel=cv2.getStructuringElement(cv2.MORPH_RECT,(41,41))    
+    mask_dilate = cv2.morphologyEx(mask_erode, cv2.MORPH_DILATE, kernel)
+    # mask_dilate=mask
+    img_copy=np.ones((mask.shape),dtype=mask.dtype)
+    contours, hierarchy = cv2.findContours(mask_dilate, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    for cnt in contours:
+        x,y,w,h = cv2.boundingRect(cnt)
+        cv2.rectangle(img_copy,(x,y),(x+w,y+h),(0,0,0),-1)
+    # plt.subplot(131)
+    # plt.imshow(mask,'gray')
+    # plt.subplot(132)
+    # plt.imshow(mask_dilate,'gray')
+    # plt.subplot(133)
+    # plt.imshow(img_copy,'gray')
+    # plt.show()
+    return img_copy
+
+
   
 # img=cv2.imread('assets/macro_test.jpg')
 # # plt.subplot(131)
@@ -108,6 +133,10 @@ def remove_artefacts(img):
 # img=cv2.imread('assets/mix.jpg')
 # extract_trap(img)
 
-# img = cv2.imread('assets/var/1273.jpg')
+# img = cv2.imread('assets/var/1112.jpg')
 # img=extract_trap(img)
 # remove_artefacts(img)
+
+# img = cv2.imread('assets/var/1261.jpg')
+# img=extract_trap(img)
+# remove_unkown_class(img)
