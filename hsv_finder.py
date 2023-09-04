@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 import math
+import utility as util
+import preprocessing as pre
+
 def nothing(x):
     pass
 
@@ -17,8 +21,8 @@ def hsv_finder(img):
 
     image=img
     h,w=image.shape[0:2]
-    h=math.floor(h*0.5)
-    w=math.floor(w*0.5)
+    h=math.floor(h*0.6)
+    w=math.floor(w*0.6)
     print(image.shape[0:2],(h,w))
     image = cv2.resize(image, (h,w))  
     cv2.namedWindow('image')
@@ -76,5 +80,40 @@ def hsv_finder(img):
 
     cv2.destroyAllWindows()
 
-# img_macro=cv2.imread('assets/macro_test.jpg')
-# hsv_finder(img_macro)
+img=cv2.imread('assets/wf_test.jpg')
+wf_cropped=img[200:750,2000:2700,:]
+# util.viewBGR(img)
+# util.viewBGR(wf_cropped)
+print(wf_cropped.shape)
+
+img=cv2.imread('assets/macro_test.jpg')
+macro_cropped=img[1460:1800,500:1000,:] 
+# util.viewBGR(img)
+# util.viewBGR(macro_cropped)  
+print(macro_cropped.shape)
+
+img=cv2.imread('assets/nesi_test.jpg')
+nesi_cropped=img[600:1300,2000:2400,:] 
+# util.viewBGR(img)
+# util.viewBGR(nesi_cropped)  
+print(nesi_cropped.shape)
+canvas=np.zeros((700,1600,3),np.uint8)
+canvas[0:550,0:700,:]=wf_cropped
+canvas[0:340,700:1200,:]=macro_cropped
+canvas[0:700,1200:1600,:]=nesi_cropped
+# plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
+# plt.show()
+
+canvas=cv2.medianBlur(canvas,7)
+canvas=pre.hist_eq(canvas)
+
+# plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
+# plt.show()
+img=cv2.imread('assets/other.jpg')
+# img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+img=img[1100:1800,720:1700]
+img=pre.hist_eq(img)
+# plt.imshow(img)
+# plt.show()
+
+hsv_finder(img)
