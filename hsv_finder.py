@@ -21,8 +21,8 @@ def hsv_finder(img):
 
     image=img
     h,w=image.shape[0:2]
-    h=math.floor(h*0.6)
-    w=math.floor(w*0.6)
+    h=math.floor(h*0.9)
+    w=math.floor(w*0.9)
     print(image.shape[0:2],(h,w))
     image = cv2.resize(image, (h,w))  
     cv2.namedWindow('image')
@@ -94,7 +94,7 @@ print(macro_cropped.shape)
 
 img=cv2.imread('assets/nesi_test.jpg')
 nesi_cropped=img[600:1300,2000:2400,:] 
-# util.viewBGR(img)
+# # util.viewBGR(img)
 # util.viewBGR(nesi_cropped)  
 print(nesi_cropped.shape)
 canvas=np.zeros((700,1600,3),np.uint8)
@@ -106,14 +106,17 @@ canvas[0:700,1200:1600,:]=nesi_cropped
 
 canvas=cv2.medianBlur(canvas,7)
 canvas=pre.hist_eq(canvas)
+# hsv_finder(canvas)
 
 # plt.imshow(cv2.cvtColor(canvas,cv2.COLOR_BGR2RGB))
 # plt.show()
-img=cv2.imread('assets/other.jpg')
+# img=cv2.imread('assets/other.jpg')
 # img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-img=img[1100:1800,720:1700]
-img=pre.hist_eq(img)
+# img=img[1100:1800,720:1700]
+# img=pre.hist_eq(img)
 # plt.imshow(img)
 # plt.show()
 
+img=cv2.imread('assets/nesi_ref.jpg')
+# img=pre.hist_eq(img)
 hsv_finder(img)

@@ -26,11 +26,14 @@ def hsv_sep_wf(img):
 def hsv_sep_macro(img):
     return hsv_sep(img,(0,138,0),(179,243,255))    
        
-def hsv_sep_nesi(img):
-    return hsv_sep(img,(0,0,0),(24,250,212))
+# def hsv_sep_nesi(img):  #ori
+#     return hsv_sep(img,(0,0,0),(24,250,212))
 
 # def hsv_sep_nesi(img):
-#     return hsv_sep(img,(0,0,0),(179,242,225))
+#     return hsv_sep(img,(25,0,0),(31,215,200))
+
+def hsv_sep_nesi(img):
+    return hsv_sep(img,(16,0,0),(33,200,200))
     
 def hsv_sep_unkown(img):
     return hsv_sep(img,(29,0,0),(179,255,255))
